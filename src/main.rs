@@ -7,9 +7,3 @@ fn main() {
     println!("Your name is, {}!", &name);
 }
 
-fn welcome_menu(str: choice) -> str {
-
-    match  {
-      op  
-    }
-}
