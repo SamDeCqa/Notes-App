@@ -1,1 +1,2 @@
-pub mod welcome;
+pub mod note;
+pub mod menu;

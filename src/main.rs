@@ -1,16 +1,10 @@
 mod components;
 
-use components::welcome::{
-    show
-};
+use components::menu::show;
 
 fn main() {
-    /*let mut name = String::from("Samwel");
-    println!("Hello, there!");
-    println!("Hello, {}!", &name);
-    
-    name = String::from("Developer");
-    println!("Your name is, {}!", &name);*/
+    println!("Hey there! What's up?");
+    println!("What do you wanna do?");
+
     show();
 }
-

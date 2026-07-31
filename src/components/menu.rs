@@ -1,3 +1,4 @@
+
 use std::{io::stdin};
 
 enum MENU {
@@ -7,10 +8,13 @@ enum MENU {
     Delete,
 }
 
+fn menu_list() {
+    println!(" 1. Browse \n 2. Create \n 3. Edit \n 4. Delete \n 0. Exit");
+}
+
 pub fn show(){
     let mut  opt : String = String::new();
 
-    greetings();
 
     menu_list();
 
@@ -30,17 +34,6 @@ pub fn show(){
     menu_descriptions(choosen);
     
 }
-
-fn greetings() {
-    println!("Hey there! What's up?");
-    println!("What do you wanna do?");
-}
-
-fn menu_list() {
-    println!(" 1. Browse \n 2. Create \n 3. Edit \n 4. Delete \n 0. Exit");
-}
-
-
 
 fn menu_descriptions(choice : MENU) {
     match choice {
