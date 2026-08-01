@@ -55,9 +55,9 @@ fn menu_descriptions(choice : MENU) {
             println!("What's the content of the Note?");
             stdin().read_line(&mut body).expect("Failed to read input");
 
-            let mut notes : Vec<Note> = Vec::new();
+            // let mut notes : Vec<Note> = Vec::new();
 
-            Note::create_note(&mut notes, title, body);
+            Note::create_note(title, body);
 
             println!("Creating a new note ....")
         }

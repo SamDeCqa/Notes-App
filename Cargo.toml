@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+dotenvy = "0.15.7"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
-time = { version = "0.3.54", features = ["serde"] }
+time = { version = "0.3.54", features = ["serde", "formatting"] }

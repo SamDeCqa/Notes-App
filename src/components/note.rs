@@ -1,7 +1,7 @@
 use std::fs;
 
 use serde::{Deserialize, Serialize};
-use serde_json::to_string_pretty;
+use serde_json::{from_str, to_string_pretty};
 use time::OffsetDateTime;
 
 #[derive(Serialize, Deserialize)]
@@ -9,8 +9,8 @@ pub struct Note {
     id: u32,
     title: String,
     body: String,
-    created_at: OffsetDateTime,
-    updated_at: OffsetDateTime,
+    created_at: String,
+    updated_at: String,
 }
 
 fn save(notes: &Vec<Note>) {
@@ -19,21 +19,29 @@ fn save(notes: &Vec<Note>) {
 }
 
 impl Note {
-    pub fn create_note(notes: &mut Vec<Note>, title: String, body: String) {
+    pub fn create_note(title: String, body: String) {
+
+        let mut notes : Vec<Note> = match fs::read_to_string("Notes.json") {
+            Ok(content) => from_str(&content).unwrap_or(Vec::new()),
+            Err(_) => Vec::new(),
+        };
+
         //Ninahitaji simple auto-incrementing ID ili iwe rahisi kuSelect note ipi ya kufuta au kuEdit
         let id = notes.iter().map(|n| n.id).max().unwrap_or(0) + 1;
-        let now = OffsetDateTime::now_utc();
+
+
+        let now = OffsetDateTime::now_utc().to_string();
 
         let new_note = Note {
             id: id,
             title,
             body,
-            created_at: now,
+            created_at: now.clone(),
             updated_at: now,
         };
 
         notes.push(new_note);
-        save(notes);
+        save(&notes);
 
         println!("You are creating a Note")
     }
