@@ -38,7 +38,7 @@ impl Note {
         let now = OffsetDateTime::now_utc().to_string();
 
         let new_note = Note {
-            id: id,
+            id,
             title,
             body,
             created_at: now.clone(),

@@ -51,9 +51,11 @@ fn menu_descriptions(choice : MENU) {
 
             println!("Enter title of the Note");
             stdin().read_line(&mut title).expect("Failed to read input");
+            title = title.trim().to_string();
 
             println!("What's the content of the Note?");
             stdin().read_line(&mut body).expect("Failed to read input");
+            body = body.trim().to_string();
 
             // let mut notes : Vec<Note> = Vec::new();
 
