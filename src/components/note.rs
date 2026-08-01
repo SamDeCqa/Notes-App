@@ -1,5 +1,6 @@
-use std::fs;
+use std::{env, fs};
 
+use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
 use time::OffsetDateTime;
@@ -15,20 +16,28 @@ pub struct Note {
 
 fn save(notes: &Vec<Note>) {
     let json_text = to_string_pretty(notes).expect("Unable to Convert to Json");
-    fs::write("Notes.json", json_text).expect("Unable to save Note");
+
+    dotenv().ok();
+    
+    fs::write(
+        env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified"),
+        json_text,
+    )
+    .expect("Unable to save Note");
 }
 
 impl Note {
     pub fn create_note(title: String, body: String) {
-
-        let mut notes : Vec<Note> = match fs::read_to_string("Notes.json") {
+        dotenv().ok();
+        let mut notes: Vec<Note> = match fs::read_to_string(
+            env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified"),
+        ) {
             Ok(content) => from_str(&content).unwrap_or(Vec::new()),
             Err(_) => Vec::new(),
         };
 
         //Ninahitaji simple auto-incrementing ID ili iwe rahisi kuSelect note ipi ya kufuta au kuEdit
         let id = notes.iter().map(|n| n.id).max().unwrap_or(0) + 1;
-
 
         let now = OffsetDateTime::now_utc().to_string();
 
