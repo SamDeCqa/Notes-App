@@ -1,6 +1,5 @@
 use std::{env, fs};
 
-use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
 use time::OffsetDateTime;
@@ -16,8 +15,6 @@ pub struct Note {
 
 fn save(notes: &Vec<Note>) {
     let json_text = to_string_pretty(notes).expect("Unable to Convert to Json");
-
-    dotenv().ok();
     
     fs::write(
         env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified"),
@@ -28,7 +25,6 @@ fn save(notes: &Vec<Note>) {
 
 impl Note {
     pub fn create_note(title: String, body: String) {
-        dotenv().ok();
         let mut notes: Vec<Note> = match fs::read_to_string(
             env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified"),
         ) {
