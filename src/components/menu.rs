@@ -1,5 +1,6 @@
 
-use std::{io::stdin};
+use std::{io::stdin, println};
+use crate::components::note::{Note};
 
 enum MENU {
     Browse,
@@ -40,9 +41,28 @@ fn menu_descriptions(choice : MENU) {
         MENU::Browse => {
             println!("Looking for any existing notes ....")
         }
+
+
         MENU::Create => {
+
+            let mut title = String::new();
+        
+            let mut body = String::new();
+
+            println!("Enter title of the Note");
+            stdin().read_line(&mut title).expect("Failed to read input");
+
+            println!("What's the content of the Note?");
+            stdin().read_line(&mut body).expect("Failed to read input");
+
+            let mut notes : Vec<Note> = Vec::new();
+
+            Note::create_note(&mut notes, title, body);
+
             println!("Creating a new note ....")
         }
+
+
         MENU::Update => {
             println!("Updating a Note, Please wait ....")
         }
