@@ -39,7 +39,9 @@ pub fn show(){
 fn menu_descriptions(choice : MENU) {
     match choice {
         MENU::Browse => {
-            println!("Looking for any existing notes ....")
+            println!("Loading ....");
+            Note::display_notes();
+            println!("DONE");
         }
 
 
@@ -61,7 +63,8 @@ fn menu_descriptions(choice : MENU) {
 
             Note::create_note(title, body);
 
-            println!("Creating a new note ....")
+            println!("Creating a new note ....");
+            println!("DONE")
         }
 
 

@@ -1,4 +1,4 @@
-use std::{env, format, fs};
+use std::{env, format, fs::{self}, println};
 
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
@@ -53,6 +53,34 @@ impl Note {
         save(&notes);
 
         println!("You are creating a Note")
+    }
+
+    pub fn display_notes(){
+        let file_name =env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
+        let path= format!("storage/{file_name}");
+
+        let contents = match fs::read_to_string(path) {
+            Ok(data) => data,
+            Err(_) =>  {
+                println!("Could not convert to json string");
+                return
+            }
+        };
+
+        let notes : Vec<Note> = from_str(&contents).unwrap_or(Vec::new());
+
+        println!("/****************************** ALL NOTES ({}) *******************************/", notes.len());
+
+        for note in notes {
+            println!("---------------------------------------------------------");
+            println!("---------------------------------------------------------");
+            println!("ID: \t {}", note.id);
+            println!("TITLE: \t {}", note.title);
+            println!("CONTENT: \t {}", note.body);
+            println!("DATE CREATED: \t {}", note.created_at);
+            println!("---------------------------------------------------------");
+            println!("---------------------------------------------------------\n \n");
+        }
     }
 
     // fn update(&self) {
