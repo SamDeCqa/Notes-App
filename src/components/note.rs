@@ -1,4 +1,8 @@
-use std::{env, format, fs::{self}, println};
+use std::{
+    env, format,
+    fs::{self},
+    println,
+};
 
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
@@ -14,32 +18,39 @@ pub struct Note {
 }
 
 fn save(notes: &Vec<Note>) {
-    let file_name =env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
-        let path= format!("storage/{file_name}");
-    let json_text = to_string_pretty(notes).expect("Unable to Convert to Json");
-    
-    fs::write(
-        path,
-        json_text,
-    )
-    .expect("Unable to save Note");
+    let file_name = env::var("JSON_STORAGE_FILE")
+                                .expect("Sorry! Storage file not specified");
+
+    let path = format!("storage/{file_name}");//STRING CONCATENATION YA KAWAIDA INAKATAA HAPA
+
+    let json_text = to_string_pretty(notes)
+                            .expect("Unable to Convert to Json");
+
+    fs::write(path, json_text)
+        .expect("Unable to save Note");
 }
 
 impl Note {
     pub fn create_note(title: String, body: String) {
+        let file_name = env::var("JSON_STORAGE_FILE")
+                                    .expect("Sorry! Storage file not specified");//CRASH APP NZIMA NA RUDISHA HIO MESSAGE
 
-        let file_name =env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
-        let path= format!("storage/{file_name}");
+        let path = format!("storage/{file_name}");
 
         let mut notes: Vec<Note> = match fs::read_to_string(&path) {
-            Ok(content) => from_str(&content).unwrap_or(Vec::new()),
+            Ok(content) => from_str(&content)//HII OK MAANA YAKE TUBADILI KILICHOPO KWENYE NOTES.JSON KUJA  KUWA JSON
+                                   .unwrap_or(Vec::new()), // KAMA NI EMPTY ALLOCATE HEAP YA KUTUNZA NEW DATA(NOTES)
             Err(_) => Vec::new(),
         };
 
         //Ninahitaji simple auto-incrementing ID ili iwe rahisi kuSelect note ipi ya kufuta au kuEdit
-        let id = notes.iter().map(|n| n.id).max().unwrap_or(0) + 1;
+        let id = notes.iter()//LOOP THROUGH ARRAY IN NOTES.JSON
+                            .map(|n| n.id)//CONSIDER ID's TU
+                            .max()//TAKE ID KUBWA KULIKO ZOTE
+                            .unwrap_or(0) + 1;  // CHUKUA ID KUBWA KULIKO KISHA JUMLISHA '1' KAMA HAMNA YOYOTE CHUKUA '0+1'
 
-        let now = OffsetDateTime::now_utc().to_string();
+        let now = OffsetDateTime::now_utc()
+                                         .to_string(); // HII INATUPA TIMESTAMPS FORMAT NZURI KAMA LARAVEL
 
         let new_note = Note {
             id,
@@ -52,24 +63,31 @@ impl Note {
         notes.push(new_note);
         save(&notes);
 
-        println!("You are creating a Note")
+        println!("Creating a new note ....");
+        println!("DONE")    
     }
 
-    pub fn display_notes(){
-        let file_name =env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
-        let path= format!("storage/{file_name}");
+    pub fn display_notes() {
+        let file_name = env::var("JSON_STORAGE_FILE")
+                                    .expect("Sorry! Storage file not specified");
+
+        let path = format!("storage/{file_name}");
 
         let contents = match fs::read_to_string(path) {
             Ok(data) => data,
-            Err(_) =>  {
+            Err(_) => {
                 println!("Could not convert to json string");
-                return
+                return;
             }
         };
 
-        let notes : Vec<Note> = from_str(&contents).unwrap_or(Vec::new());
+        let notes: Vec<Note> = from_str(&contents)
+                               .unwrap_or(Vec::new());
 
-        println!("/****************************** ALL NOTES ({}) *******************************/", notes.len());
+        println!(
+            "****************************** ALL NOTES ({}) *******************************",
+            notes.len()
+        );
 
         for note in notes {
             println!("---------------------------------------------------------");

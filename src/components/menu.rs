@@ -1,6 +1,5 @@
-
+use crate::components::note::Note;
 use std::{io::stdin, println};
-use crate::components::note::{Note};
 
 enum MENU {
     Browse,
@@ -13,13 +12,12 @@ fn menu_list() {
     println!(" 1. Browse \n 2. Create \n 3. Edit \n 4. Delete \n 0. Exit");
 }
 
-pub fn show(){
-    let mut  opt : String = String::new();
-
+pub fn show() {
+    let mut opt: String = String::new();//ALOCATE TO HEAP SABABU KATIKA HII STAGE YA APP BADO HATUJUI THE SIZE YA BYTES NEEDED TO STORE OUR INPUT
 
     menu_list();
 
-    stdin().read_line( &mut opt).expect("Unable to read input");
+    stdin().read_line(&mut opt).expect("Unable to read input");
 
     let choosen = match opt.trim() {
         "1" => MENU::Browse,
@@ -32,11 +30,10 @@ pub fn show(){
         }
     };
 
-    menu_descriptions(choosen);
-    
+    menu_actions(choosen);
 }
 
-fn menu_descriptions(choice : MENU) {
+fn menu_actions(choice: MENU) {
     match choice {
         MENU::Browse => {
             println!("Loading ....");
@@ -44,29 +41,21 @@ fn menu_descriptions(choice : MENU) {
             println!("DONE");
         }
 
-
         MENU::Create => {
-
             let mut title = String::new();
-        
+
             let mut body = String::new();
 
             println!("Enter title of the Note");
             stdin().read_line(&mut title).expect("Failed to read input");
-            title = title.trim().to_string();
+            title = title.trim().to_string();//TRIM VALUE KUONDOA '\n' NA WHITESPACES
 
             println!("What's the content of the Note?");
             stdin().read_line(&mut body).expect("Failed to read input");
-            body = body.trim().to_string();
-
-            // let mut notes : Vec<Note> = Vec::new();
+            body = body.trim().to_string();//TUKISHA TRIM TU VALUE INARUDI KAMA &str LAKINI  CREATE_NOTE() INA EXPECT String
 
             Note::create_note(title, body);
-
-            println!("Creating a new note ....");
-            println!("DONE")
         }
-
 
         MENU::Update => {
             println!("Updating a Note, Please wait ....")
