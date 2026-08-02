@@ -58,6 +58,29 @@ fn menu_actions(choice: MENU) {
         }
 
         MENU::Update => {
+            let mut note_selected = String::new();
+            println!("Please enter the ID of the Note you want to change");
+            stdin().read_line(&mut note_selected).expect("Failed to read input");
+
+            let id : u32 = match note_selected.trim().parse() {
+                Ok(num) => num,
+                Err(_) => {
+                    println!("Please enter a valid ID");
+                    return;
+                }
+            };
+            
+            let mut title = String::new();
+            println!("Please provide a new Title");
+            stdin().read_line(&mut title).expect("Failed to read input");
+            title = title.trim().to_string();
+            
+            let mut body = String::new();
+            println!("Now you can change the Note Content");
+            stdin().read_line(&mut body).expect("Failed to read input");
+            body = body.trim().to_string();
+
+            Note::update(id, Some(title), Some(body));
             println!("Updating a Note, Please wait ....")
         }
         MENU::Delete => {

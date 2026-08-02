@@ -1,12 +1,12 @@
 use std::{
-    env, format,
-    fs::{self},
-    println,
+    env::{self, var}, format, fs::{self}, println,
 };
 
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
 use time::OffsetDateTime;
+
+use crate::components::note;
 
 #[derive(Serialize, Deserialize)]
 pub struct Note {
@@ -101,9 +101,44 @@ impl Note {
         }
     }
 
-    // fn update(&self) {
-    //     println!("The Note with the title '{}' is to be edited", self.title)
-    // }
+    pub fn update(id : u32, title : Option<String>, body : Option<String>) {
+        let file_name = var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
+        let path = format!("storage/{file_name}");
+        let content = fs::read_to_string(path).expect("Could not read file");
+
+        let mut notes : Vec<Note> = from_str(&content).expect("Could not process file");
+
+        let mut is_found = false;
+
+        for note in &mut notes {
+            if id == note.id {
+
+                is_found = true;
+
+                if let Some(new_title) = title {
+                    note.title = new_title;
+                }
+                
+                if let Some(new_body) = body {
+                    note.body = new_body;
+                }
+
+                note.updated_at = OffsetDateTime::now_utc().to_string();
+
+                println!("The Note with the ID {} was Updated Successfully", &id);
+                println!("******************** THE UPDATED NOTE *****************");
+                println!("ID: \t{}", note.id);
+                println!("TITLE: \t{}", note.title);
+                println!("BODY: \t{}", note.body);
+                break;
+            }
+        }
+
+        if !is_found {
+            println!("A Note with the given ID was not found")
+        }
+
+    }
 
     // fn delete(&self) {
     //     println!(
