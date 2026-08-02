@@ -1,4 +1,4 @@
-use std::{env, fs};
+use std::{env, format, fs};
 
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
@@ -14,10 +14,12 @@ pub struct Note {
 }
 
 fn save(notes: &Vec<Note>) {
+    let file_name =env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
+        let path= format!("storage/{file_name}");
     let json_text = to_string_pretty(notes).expect("Unable to Convert to Json");
     
     fs::write(
-        env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified"),
+        path,
         json_text,
     )
     .expect("Unable to save Note");
@@ -25,9 +27,11 @@ fn save(notes: &Vec<Note>) {
 
 impl Note {
     pub fn create_note(title: String, body: String) {
-        let mut notes: Vec<Note> = match fs::read_to_string(
-            env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified"),
-        ) {
+
+        let file_name =env::var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
+        let path= format!("storage/{file_name}");
+
+        let mut notes: Vec<Note> = match fs::read_to_string(&path) {
             Ok(content) => from_str(&content).unwrap_or(Vec::new()),
             Err(_) => Vec::new(),
         };
