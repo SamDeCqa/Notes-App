@@ -6,8 +6,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::{from_str, to_string_pretty};
 use time::OffsetDateTime;
 
-use crate::components::note;
-
 #[derive(Serialize, Deserialize)]
 pub struct Note {
     id: u32,
@@ -104,7 +102,8 @@ impl Note {
     pub fn update(id : u32, title : Option<String>, body : Option<String>) {
         let file_name = var("JSON_STORAGE_FILE").expect("Sorry! Storage file not specified");
         let path = format!("storage/{file_name}");
-        let content = fs::read_to_string(path).expect("Could not read file");
+        
+        let content = fs::read_to_string(&path).expect("Could not read file");
 
         let mut notes : Vec<Note> = from_str(&content).expect("Could not process file");
 
@@ -118,7 +117,7 @@ impl Note {
                 if let Some(new_title) = title {
                     note.title = new_title;
                 }
-                
+
                 if let Some(new_body) = body {
                     note.body = new_body;
                 }
@@ -137,6 +136,9 @@ impl Note {
         if !is_found {
             println!("A Note with the given ID was not found")
         }
+
+        let json_text = to_string_pretty(&notes).expect("Failed to prepare the updated fields to be saved");
+        fs::write(path, json_text).expect("Failed to save file")
 
     }
 

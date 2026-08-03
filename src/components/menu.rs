@@ -81,8 +81,8 @@ fn menu_actions(choice: MENU) {
             body = body.trim().to_string();
 
             Note::update(id, Some(title), Some(body));
-            println!("Updating a Note, Please wait ....")
         }
+        
         MENU::Delete => {
             println!("Sorry! Coulld not delete note ....")
         }
