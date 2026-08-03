@@ -84,7 +84,16 @@ fn menu_actions(choice: MENU) {
         }
         
         MENU::Delete => {
-            println!("Sorry! Coulld not delete note ....")
+            let mut id = String::new();
+            println!("Enter ID for the note you want to delete");
+            stdin().read_line(&mut id).expect("Could not read your selection");
+
+            match id.trim().parse(){
+                Ok(id) =>{ 
+                    Note::delete(id);
+                },
+                Err(_) => println!("Please enter a valid ID")
+            };
         }
     }
 }

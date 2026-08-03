@@ -142,10 +142,31 @@ impl Note {
 
     }
 
-    // fn delete(&self) {
-    //     println!(
-    //         "Do you want to DELETE the Note with the title '{}'?",
-    //         self.title
-    //     )
-    // }
+    pub fn delete(id : u32) {
+        let file_name = var("JSON_STORAGE_FILE").expect("No storage file provided");
+        let path = format!("storage/{file_name}");
+
+        let content = fs::read_to_string(&path).expect("Could not read file");
+        let mut notes : Vec<Note> = from_str(&content).expect("Could not JSONify file");
+
+        let  initial_count = notes.len();
+
+        notes.retain(|note| note.id != id);//HII INAMAANISHA BAKIZA KAMA ILIVYOKUWA HAPO AWALI ILA ZINGATIA CONDITION HII "" YA KUBAKIZA
+
+        /*for note in &mut notes {
+            if note.id == id {
+                notes.pop(); //POP NI KWA STACK-LIKE FEATURE SABABU INA-REMOVE THE LAST OBJECT INSERTED
+                is_found = false;
+                }
+            }*/
+            
+            if initial_count == notes.len() {
+                println!("A Note with ID {} was not found", id);
+                return;
+        }
+        
+        let json_notes = to_string_pretty(&notes).expect("Could not prepare Updated Notes for saving");
+        fs::write(path, json_notes).expect("Failed to Save");
+        println!("Note DELETED successfully!")
+    }
 }
